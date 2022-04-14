@@ -50,17 +50,22 @@ class ShowMenuArgs {
     this.position,
     this.items,
   );
+  
+  factory ShowMenuArgs.atCursor(this.devicePixelRation, this.items);
 
   final double devicePixelRatio;
-  final Offset position;
+  final? Offset position;
   final List<MenuItem> items;
 
   Map<String, dynamic> toJson() {
-    return {
+    final res =  <String, dynamic>{
       'devicePixelRatio': devicePixelRatio,
-      'position': <double>[position.dx, position.dy],
       'items': items.map((e) => e.toJson()).toList(),
     };
+    if (position != null) {
+      res['position'] = <double>[position.dx, position.dy];
+    }
+    return res;
   }
 }
 

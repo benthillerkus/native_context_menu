@@ -11,11 +11,13 @@ class ContextMenuRegion extends StatefulWidget {
     this.onItemSelected,
     this.onDismissed,
     this.menuOffset = Offset.zero,
+    this.menuAbsolutePosition,
   }) : super(key: key);
 
   final Widget child;
   final List<MenuItem> menuItems;
   final Offset menuOffset;
+  final Offset? menuAbsolutePosition;
   final void Function(MenuItem item)? onItemSelected;
   final VoidCallback? onDismissed;
 
@@ -37,11 +39,17 @@ class _ContextMenuRegionState extends State<ContextMenuRegion> {
         if (!shouldReact) return;
 
         shouldReact = false;
-
-        final position = Offset(
-          e.position.dx + widget.menuOffset.dx,
-          e.position.dy + widget.menuOffset.dy,
-        );
+        
+        late Offset position;
+        
+        if (widget.menuAbsolutePosition == null) {
+          position = Offset(
+            e.position.dx + widget.menuOffset.dx,
+            e.position.dy + widget.menuOffset.dy,
+          );
+        } else {
+          position = widget.menuOffset + widget.menuAbsolutePosition!;
+        }
 
         final selectedItem = await showContextMenu(
           ShowMenuArgs(
